@@ -1,14 +1,18 @@
 # Quickspot
 
-Deploy spot instances (one-time) from the command line 
+Deploy spot instances (one-time) from the command line
 
 ![resource/quickspot.png](./resource/quickspot.png)
 
 #### Simple workflow
 
-If you are going to be running only a single instance at any point of time.
-This is a minimal setup. Configure `~/.config/aws/config.json` and `~/.config/aws/global_config.json`. Then simply use `qs create` and `qs connect` to create and connect to the instance and `qs list` to the list set of running instances.
+Quickspot has flexible config files that allow you to create and connect to multiple spot-instances. For a user that is going to be using a single spot instance at any point of time, below is a simple workflow
 
+* Configure `~/.config/aws/config.json` and `~/.config/aws/global_config.json`
+* Execute `qs create` to create a spot instance
+* `qs connect` to connect to the instance 
+* `qs list` to the list set of running instances.
+* From the EC2-instance, run `sudo shutdown -h now` to terminate the spot instance. 
 
 ## Installation
 
