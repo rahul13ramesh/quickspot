@@ -1,0 +1,14 @@
+{
+    "ImageId": "ami-09ebd9cdc8f2e368a",
+    "InstanceType": "g4dn.xlarge",
+    "KeyName": "rahul-laptop",
+    "SecurityGroupIds": [ "sg-0abscdsfsafas" ],
+    "Placement": {
+            "AvailabilityZone": "us-east-1b"
+    },
+    "volume-id": "vol-00abscsdfgsasfdasfd",
+    "tags": [{
+        "Key": "Name",
+        "Value": "machine1-g4dn-b"
+    }]
+}

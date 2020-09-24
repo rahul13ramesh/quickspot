@@ -1,0 +1,13 @@
+{ 
+    "aws_access_key_id": "AWS_ACCESS_KEY_ID",
+    "aws_secret_access_key": "AWS_SECRETE_ACCESS_KEY",
+    "pem-file": "~/.ssh/rahul-laptop",
+    "KeyName": "rahul-laptop",
+    "tags": [
+        {
+            "Key": "owner",
+            "Value": "rahul"
+        }
+    ],
+    "defaultConfig": "config.json"
+}
