@@ -26,9 +26,9 @@ $ pip install git+https://github.com/rahul13ramesh/quickspot.git
 
 * Fetch the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from the [IAM
   console](https://console.aws.amazon.com/iam/home?#/security_credentials})
-* Setup `boto3` credentials at default zone ([guide](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html))
+* Setup credentials and the default zone for `boto3` ([guide](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html))
 * Configure `~/.config/aws/global_config.json` (global config applied to all
-  instances) from the command line. The `KeyName` is the name of the private
+  instances). The `KeyName` is the name of the private
   key on AWS while `pem-file` is the path to the file on your machine. `tags`
   will be applied to every instance your create.
 ```json
@@ -97,18 +97,18 @@ Options:
 
 #### Create
 Note that `qs create` will default to using `~/.config/aws/config.json`. You
-can use additional config files as follows:
-* Add a file to `~/.config/aws/config_machine2.json`
+can use another config files as follows:
+* Add a file to `~/.config/aws/` (For example `~/.config/aws/config_machine2.json`)
 * Call `qs create config_machine2`
-* Make sure to add the tag "Name". This is useful for connecting
+* Make sure to add the tag "Name". This can be used with the `connect`, to specify the instance to which you want to connect to.
 
 #### Connect
 Note that `qs connect` will connect to one of the running instance. To connect
 to a specific instance, consider using `qs connect <Name tag>`, where the name
-tag is specific in the associate config file (ex: `~/.config/aws/config.json`)
+tag is specified in the associated config file (The "Tags" field in  `~/.config/aws/config.json`)
 
 #### Shutting down instance
-Run the following from the command line of the instance
+Run the following, from the command line of the ec2-instance
 ```bash
 sudo shutdown -h now
 ```
