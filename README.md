@@ -1,6 +1,6 @@
 # Quickspot
 
-Deploy spot instances from the command line
+Deploy spot instances (one-time) from the command line 
 
 
 ## Installation
