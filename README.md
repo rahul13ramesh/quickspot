@@ -2,6 +2,13 @@
 
 Deploy spot instances (one-time) from the command line 
 
+![resource/quickspot.png](./resource/quickspot.png)
+
+#### Simple workflow
+
+If you are going to be running only a single instance at any point of time.
+This is a minimal setup. Configure `~/.config/aws/config.json` and `~/.config/aws/global_config.json`. Then simply use `qs create` and `qs connect` to create and connect to the instance and `qs list` to the list set of running instances.
+
 
 ## Installation
 
@@ -102,8 +109,4 @@ Run the following from the command line of the instance
 sudo shutdown -h now
 ```
 
-#### Simple workflow
-
-If you are going to be running only a single instance at any point of time.
-This is a minimal setup. Configure `~/.config/aws/config.json` and `~/.config/aws/global_config.json`. Then simply use `qs create` and `qs connect` to create and connect to the instance and `qs list` to the list set of running instances.
 
