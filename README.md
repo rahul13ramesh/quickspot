@@ -35,8 +35,8 @@ $ pip install git+https://github.com/rahul13ramesh/quickspot.git
 { 
     "aws_access_key_id": "AWS_ACCESS_KEY_ID",
     "aws_secret_access_key": "AWS_SECRETE_ACCESS_KEY",
-    "pem-file": "~/.ssh/rahul-laptop", 
-    "KeyName": "rahul-laptop",
+    "pem-file": "~/.ssh/laptop", 
+    "KeyName": "laptop",
     "tags": [
         {
             "Key": "owner",
@@ -55,14 +55,14 @@ $ pip install git+https://github.com/rahul13ramesh/quickspot.git
 
 ```json
 {
-    "ImageId": "ami-0123450012ea098da",
+    "ImageId": "ami-0123450012341234",
     "InstanceType": "g4dn.xlarge",
     "KeyName": "rahul-laptop",
-    "SecurityGroupIds": [ "sg-0abscdsfsafas" ],
+    "SecurityGroupIds": [ "sg-012345abcdef" ],
     "Placement": {
             "AvailabilityZone": "us-east-1b"
     },
-    "volume-id": "vol-00abscsdfgsasfdasfd",
+    "volume-id": "vol-00abscddefghijk",
     "tags": [{
         "Key": "Name",
         "Value": "machine1-g4dn-b"
