@@ -1,14 +1,18 @@
 # Quickspot
 
-Deploy spot instances (one-time) from the command line 
+Deploy spot instances (one-time) from the command line
 
 ![resource/quickspot.png](./resource/quickspot.png)
 
 #### Simple workflow
 
-If you are going to be running only a single instance at any point of time.
-This is a minimal setup. Configure `~/.config/aws/config.json` and `~/.config/aws/global_config.json`. Then simply use `qs create` and `qs connect` to create and connect to the instance and `qs list` to the list set of running instances.
+Quickspot has flexible config files that allow you to create and connect to multiple spot-instances. For a user that is going to be using a single spot instance at any point of time, below is a simple workflow
 
+* Configure `~/.config/aws/config.json` and `~/.config/aws/global_config.json`
+* Execute `qs create` to create a spot instance
+* `qs connect` to connect to the instance 
+* `qs list` to the list set of running instances.
+* From the EC2-instance, run `sudo shutdown -h now` to terminate the spot instance. 
 
 ## Installation
 
@@ -22,17 +26,17 @@ $ pip install git+https://github.com/rahul13ramesh/quickspot.git
 
 * Fetch the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from the [IAM
   console](https://console.aws.amazon.com/iam/home?#/security_credentials})
-* Setup `boto3` credentials at default zone ([guide](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html))
+* Setup credentials and the default zone for `boto3` ([guide](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html))
 * Configure `~/.config/aws/global_config.json` (global config applied to all
-  instances) from the command line. The `KeyName` is the name of the private
+  instances). The `KeyName` is the name of the private
   key on AWS while `pem-file` is the path to the file on your machine. `tags`
   will be applied to every instance your create.
 ```json
 { 
     "aws_access_key_id": "AWS_ACCESS_KEY_ID",
     "aws_secret_access_key": "AWS_SECRETE_ACCESS_KEY",
-    "pem-file": "~/.ssh/rahul-laptop", 
-    "KeyName": "rahul-laptop",
+    "pem-file": "~/.ssh/laptop", 
+    "KeyName": "laptop",
     "tags": [
         {
             "Key": "owner",
@@ -51,14 +55,14 @@ $ pip install git+https://github.com/rahul13ramesh/quickspot.git
 
 ```json
 {
-    "ImageId": "ami-0123450012ea098da",
+    "ImageId": "ami-0123450012341234",
     "InstanceType": "g4dn.xlarge",
     "KeyName": "rahul-laptop",
-    "SecurityGroupIds": [ "sg-0abscdsfsafas" ],
+    "SecurityGroupIds": [ "sg-012345abcdef" ],
     "Placement": {
             "AvailabilityZone": "us-east-1b"
     },
-    "volume-id": "vol-00abscsdfgsasfdasfd",
+    "volume-id": "vol-00abscddefghijk",
     "tags": [{
         "Key": "Name",
         "Value": "machine1-g4dn-b"
@@ -93,18 +97,18 @@ Options:
 
 #### Create
 Note that `qs create` will default to using `~/.config/aws/config.json`. You
-can use additional config files as follows:
-* Add a file to `~/.config/aws/config_machine2.json`
+can use another config files as follows:
+* Add a file to `~/.config/aws/` (For example `~/.config/aws/config_machine2.json`)
 * Call `qs create config_machine2`
-* Make sure to add the tag "Name". This is useful for connecting
+* Make sure to add the tag "Name". This can be used with the `connect`, to specify the instance to which you want to connect to.
 
 #### Connect
 Note that `qs connect` will connect to one of the running instance. To connect
 to a specific instance, consider using `qs connect <Name tag>`, where the name
-tag is specific in the associate config file (ex: `~/.config/aws/config.json`)
+tag is specified in the associated config file (The "Tags" field in  `~/.config/aws/config.json`)
 
 #### Shutting down instance
-Run the following from the command line of the instance
+Run the following, from the command line of the ec2-instance
 ```bash
 sudo shutdown -h now
 ```
