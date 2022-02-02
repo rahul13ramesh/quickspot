@@ -2,6 +2,7 @@
 """
 Usage:
   qs create   [<config_file>]
+  qs start    [<name_tag>]
   qs connect  [<name_tag>]
   qs copyto   [<name_tag>]  --src=<src_file> --dst=<dest_file>
   qs copyfrom [<name_tag>]  --src=<src_file> --dst=<dest_file>
@@ -11,6 +12,7 @@ Usage:
 
 Arguments:
   list           List Instances
+  start          Start an on-demand instance
   connect        Connect to an active instance
   attach         Attach a volume
   create         Create a new spot instance request
@@ -119,6 +121,30 @@ class AwsCli():
                       "\n   Request ID : %s" % (
                        self.config['InstanceType'],
                        instId, reqId))
+
+    def start(self, name, owner):
+        response = self.client.describe_instances()
+        status = 0
+        for inst in response['Reservations']:
+            info = inst['Instances'][0]
+            if self.getTag(info, 'owner') == owner:
+                machName = self.getTag(info, 'Name')
+                if (name is None) or machName == name:
+                    status = 1
+                    inst_id = info['InstanceId']
+                    response = self.client.start_instances(
+                        InstanceIds=[inst_id],
+                    )
+                    response = response['StartingInstances'][0]
+                    if response['PreviousState']['Code'] == 16:
+                        print("\nInstance %s is already running" % (name))
+                    elif response['CurrentState']['Code'] <= 16:
+                        print("\nInstance %s is had been started" % (name))
+                    else:
+                        print("\nUnable to start %s" % (name))
+                    break
+        if status == 0:
+            print("Could not find instance %s" % (name))
 
     def tagResource(self, resourceId):
         self.client.create_tags(
@@ -251,10 +277,12 @@ class AwsCli():
         instanceTable = []
         header = ['User', 'Inst. Name', 'Type', 'State',
                   'Ext. Vol.', 'Zone']
+        sortkey = []
         for inst in response['Reservations']:
             info = inst['Instances'][0]
             row = []
             row.append(self.getTag(info, 'owner'))
+            sortkey.append(self.getTag(info, 'owner'))
             row.append(self.getTag(info, 'Name'))
             row.append(info['InstanceType'])
             row.append(info['State']['Name'])
@@ -266,6 +294,9 @@ class AwsCli():
 
             row.append(self.getZone(info))
             instanceTable.append(row)
+        sortInd = list(np.argsort(sortkey))
+        instanceTable = [instanceTable[i] for i in sortInd]
+
         print(tabulate(instanceTable, headers=header))
 
     def connect(self, name, owner, keypath):
@@ -408,6 +439,9 @@ def main():
         aws.listInstances()
     elif arguments['price']:
         aws.listPrices()
+    elif arguments['start']:
+        owner = getOwnerTag_fromGlobConfig(glob_config)
+        aws.start(arguments['<name_tag>'], owner)
     elif arguments['connect']:
         owner = getOwnerTag_fromGlobConfig(glob_config)
         aws.connect(arguments['<name_tag>'], owner,
