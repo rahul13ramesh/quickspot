@@ -3,6 +3,7 @@
 Usage:
   qs create   [<config_file>]
   qs start    [<name_tag>]
+  qs ip       [<name_tag>]
   qs connect  [<name_tag>]
   qs copyto   [<name_tag>]  --src=<src_file> --dst=<dest_file>
   qs copyfrom [<name_tag>]  --src=<src_file> --dst=<dest_file>
@@ -299,6 +300,25 @@ class AwsCli():
 
         print(tabulate(instanceTable, headers=header))
 
+    def listPublicIP(self, name, owner):
+        response = self.client.describe_instances()
+        instanceTable = []
+        sortkey = []
+
+        ip_val = None
+        for inst in response['Reservations']:
+            info = inst['Instances'][0]
+            if self.getTag(info, 'owner') == owner:
+                machName = self.getTag(info, 'Name')
+                if (name is None) or machName == name:
+                    found = True
+                    ip_val = info['PublicDnsName']
+
+        if ip_val is None:
+            print("Instance %s not found" % name)
+        else:
+            print("Public IP of %s: %s" % (name, ip_val))
+
     def connect(self, name, owner, keypath):
         response = self.client.describe_instances()
         status = 0
@@ -314,6 +334,7 @@ class AwsCli():
                         net = info['NetworkInterfaces'][0]
                         name = net['Association']['PublicDnsName']
                         ssh_cmd = ["ssh",
+                                   # "-Y",
                                    "-i", keypath,
                                    "ubuntu@" + name]
                         print("Connecting....")
@@ -437,6 +458,9 @@ def main():
         aws.createInstance()
     elif arguments['list']:
         aws.listInstances()
+    elif arguments['ip']:
+        owner = getOwnerTag_fromGlobConfig(glob_config)
+        aws.listPublicIP(arguments['<name_tag>'], owner)
     elif arguments['price']:
         aws.listPrices()
     elif arguments['start']:
